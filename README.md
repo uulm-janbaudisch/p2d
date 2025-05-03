@@ -1,7 +1,9 @@
 # p2d - A Pseudo-Boolean d-DNNF Compiler
 Our tool p2d can be used for d-DNNF compilation or model counting on a pseudo-Boolean formula.
 A pseudo-Boolean formula is a conjunction of inequalities following the structure seen below.
+
 $$\sum_{i=1}^n a_i \cdot v_i \geq b$$
+
 Here, $a_i$ and b are numeric constants and $v_i$ are oolean variables. Pseudo-Boolean formulas are a generalization of CNFs as each clause $(v_1 \vee \ldots \vee v_n)$ can be represented as $\sum_{i=1}^n 1 \cdot v_i \geq 1$.
 
 # Building
