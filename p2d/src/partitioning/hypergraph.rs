@@ -1,8 +1,8 @@
-use std::collections::{BTreeMap, BTreeSet};
 use crate::partitioning::disconnected_component_datastructure::{Component, ComponentBasedFormula};
 use crate::partitioning::hypergraph_partitioning::partition;
 use crate::solving::pseudo_boolean_datastructure::ConstraintIndex::NormalConstraintIndex;
 use crate::solving::solver::Solver;
+use std::collections::{BTreeMap, BTreeSet};
 
 pub struct Hypergraph {
     pub(crate) pins: Vec<u32>,
@@ -13,7 +13,7 @@ pub struct Hypergraph {
     pub(crate) constraint_index_map: Vec<usize>,
     pub(crate) constraint_index_map_reverse: BTreeMap<usize, u32>,
     pub(crate) current_constraint_index: u32,
-    pub(crate) single_variables: BTreeSet<usize>
+    pub(crate) single_variables: BTreeSet<usize>,
 }
 
 impl Hypergraph {
@@ -32,10 +32,24 @@ impl Hypergraph {
         hypergraph.x_pins.push(0);
 
         for variable_in_scope in &solver.variable_in_scope {
-            if solver.assignments.get(*variable_in_scope).unwrap().is_none() {
+            if solver
+                .assignments
+                .get(*variable_in_scope)
+                .unwrap()
+                .is_none()
+            {
                 let mut tmp_constraint_indexes = Vec::new();
-                for constraint_index in solver.pseudo_boolean_formula.constraints_by_variable.get(*variable_in_scope).unwrap() {
-                    let constraint = solver.pseudo_boolean_formula.constraints.get(*constraint_index).unwrap();
+                for constraint_index in solver
+                    .pseudo_boolean_formula
+                    .constraints_by_variable
+                    .get(*variable_in_scope)
+                    .unwrap()
+                {
+                    let constraint = solver
+                        .pseudo_boolean_formula
+                        .constraints
+                        .get(*constraint_index)
+                        .unwrap();
                     if constraint.is_unsatisfied() {
                         if let NormalConstraintIndex(index) = constraint.index {
                             tmp_constraint_indexes.push(index);
@@ -44,21 +58,26 @@ impl Hypergraph {
                 }
                 if tmp_constraint_indexes.len() > 0 {
                     hypergraph.variable_index_map.push(*variable_in_scope);
-                    hypergraph.variable_index_map_reverse.insert(*variable_in_scope, hypergraph.current_variable_index);
+                    hypergraph
+                        .variable_index_map_reverse
+                        .insert(*variable_in_scope, hypergraph.current_variable_index);
                     hypergraph.current_variable_index += 1;
                     for constraint_index in tmp_constraint_indexes {
-                        let index =
-                            match hypergraph.constraint_index_map_reverse.get(&constraint_index) {
-                                Some(v) => {
-                                    *v
-                                },
-                                None => {
-                                    hypergraph.constraint_index_map.push(constraint_index);
-                                    hypergraph.constraint_index_map_reverse.insert(constraint_index, hypergraph.current_constraint_index as u32);
-                                    hypergraph.current_constraint_index += 1;
-                                    (hypergraph.current_constraint_index - 1) as u32
-                                }
-                            };
+                        let index = match hypergraph
+                            .constraint_index_map_reverse
+                            .get(&constraint_index)
+                        {
+                            Some(v) => *v,
+                            None => {
+                                hypergraph.constraint_index_map.push(constraint_index);
+                                hypergraph.constraint_index_map_reverse.insert(
+                                    constraint_index,
+                                    hypergraph.current_constraint_index as u32,
+                                );
+                                hypergraph.current_constraint_index += 1;
+                                (hypergraph.current_constraint_index - 1) as u32
+                            }
+                        };
 
                         hypergraph.pins.push(index);
                     }
@@ -87,7 +106,6 @@ impl Hypergraph {
         to_visit.push(0);
         loop {
             while !to_visit.is_empty() {
-
                 let constraint_index = to_visit.pop().unwrap();
 
                 if let Some(label) = partvec.get(constraint_index as usize).unwrap() {
@@ -95,10 +113,21 @@ impl Hypergraph {
                 }
                 number_visited += 1;
                 partvec[constraint_index as usize] = Some(current_partition_label);
-                let constraint = solver.pseudo_boolean_formula.constraints.get(*self.constraint_index_map.get(constraint_index as usize).unwrap()).unwrap();
+                let constraint = solver
+                    .pseudo_boolean_formula
+                    .constraints
+                    .get(
+                        *self
+                            .constraint_index_map
+                            .get(constraint_index as usize)
+                            .unwrap(),
+                    )
+                    .unwrap();
                 for (index, _) in &constraint.unassigned_literals {
                     let hg_index = *self.variable_index_map_reverse.get(index).unwrap() as usize;
-                    for i in *self.x_pins.get(hg_index).unwrap()..*self.x_pins.get(hg_index + 1).unwrap() {
+                    for i in
+                        *self.x_pins.get(hg_index).unwrap()..*self.x_pins.get(hg_index + 1).unwrap()
+                    {
                         to_visit.push(*self.pins.get(i as usize).unwrap());
                     }
                 }
@@ -126,19 +155,28 @@ impl Hypergraph {
 
     pub fn get_variables_for_cut(&self) -> Vec<u32> {
         if self.current_constraint_index <= 1 || self.current_variable_index <= 1 {
-            return Vec::new()
+            return Vec::new();
         }
         let mut next_variables = Vec::new();
-        let (_, _, edges_to_remove) = partition(self.current_constraint_index, self.current_variable_index, &self.pins, &self.x_pins);
+        let (_, _, edges_to_remove) = partition(
+            self.current_constraint_index,
+            self.current_variable_index,
+            &self.pins,
+            &self.x_pins,
+        );
         for e in edges_to_remove {
             next_variables.push(*self.variable_index_map.get(e as usize).unwrap() as u32);
         }
         next_variables
     }
 
-
     pub fn create_partition(&self, solver: &Solver, partvec: Vec<u32>) -> ComponentBasedFormula {
-        let mut component_based_formula = ComponentBasedFormula::new(solver.number_unsat_constraints, solver.number_unassigned_variables, solver.variable_in_scope.clone(), solver.constraint_indexes_in_scope.clone());
+        let mut component_based_formula = ComponentBasedFormula::new(
+            solver.number_unsat_constraints,
+            solver.number_unassigned_variables,
+            solver.variable_in_scope.clone(),
+            solver.constraint_indexes_in_scope.clone(),
+        );
         let mut number_partitions = 0;
         for p in &partvec {
             if *p > number_partitions {
@@ -157,13 +195,22 @@ impl Hypergraph {
         }
         for (index, partition_number) in partvec.iter().enumerate() {
             let constraint_index = self.constraint_index_map.get(index).unwrap();
-            let component = component_based_formula.components.get_mut(*partition_number as usize).unwrap();
+            let component = component_based_formula
+                .components
+                .get_mut(*partition_number as usize)
+                .unwrap();
 
-            let constraint = solver.pseudo_boolean_formula.constraints.get(*constraint_index).unwrap();
+            let constraint = solver
+                .pseudo_boolean_formula
+                .constraints
+                .get(*constraint_index)
+                .unwrap();
 
             if constraint.is_unsatisfied() {
                 component.number_unsat_constraints += 1;
-                component.constraint_indexes_in_scope.insert(*constraint_index);
+                component
+                    .constraint_indexes_in_scope
+                    .insert(*constraint_index);
                 for (i, _) in &constraint.unassigned_literals {
                     if !component.variables.contains(i) {
                         component.number_unassigned_variables += 1;

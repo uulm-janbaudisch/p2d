@@ -1,6 +1,6 @@
 mod parser;
 
-pub use parser::{parse, Rule};
+pub use parser::{Rule, parse};
 
 use bimap::{BiHashMap, BiMap};
 
@@ -27,7 +27,7 @@ impl OPBFile {
 pub struct Equation {
     pub lhs: Vec<Summand>,
     pub rhs: i128,
-    pub kind: EquationKind
+    pub kind: EquationKind,
 }
 
 #[derive(PartialEq, Debug, Clone)]
@@ -37,12 +37,12 @@ pub enum EquationKind {
     Le,
     G,
     L,
-    NotEq
+    NotEq,
 }
 
 #[derive(Clone)]
 pub struct Summand {
     pub variable_index: u32,
     pub factor: i128,
-    pub positive: bool
+    pub positive: bool,
 }

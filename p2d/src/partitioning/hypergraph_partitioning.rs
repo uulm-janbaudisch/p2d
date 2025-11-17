@@ -1,8 +1,16 @@
-use std::ptr;
-use crate::partitioning::patoh_api::{PaToH_Alloc, PaToH_Free, PaToH_Initialize_Parameters, PaToH_Parameters, PaToH_Part, PATOH_CONPART, PATOH_SUGPARAM_DEFAULT};
+use crate::partitioning::patoh_api::{
+    PaToH_Alloc, PaToH_Free, PaToH_Initialize_Parameters, PaToH_Parameters, PaToH_Part,
+    PATOH_CONPART, PATOH_SUGPARAM_DEFAULT,
+};
 use libc::{c_int, free, malloc};
+use std::ptr;
 
-pub fn partition(number_vertices: u32, number_nets: u32, nets: &Vec<u32>, x_pins: &Vec<u32>) -> (u32, Vec<u32>, Vec<u32>) {
+pub fn partition(
+    number_vertices: u32,
+    number_nets: u32,
+    nets: &Vec<u32>,
+    x_pins: &Vec<u32>,
+) -> (u32, Vec<u32>, Vec<u32>) {
     unsafe {
         let mut args: PaToH_Parameters = PaToH_Parameters {
             cuttype: 0,
@@ -61,13 +69,19 @@ pub fn partition(number_vertices: u32, number_nets: u32, nets: &Vec<u32>, x_pins
         let c: c_int = number_vertices as c_int;
         let n: c_int = number_nets as c_int;
         let nconst: c_int = 1;
-        let cwghts: *mut c_int = malloc((c as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
-        let nwghts: *mut c_int = malloc((n as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
-        let xpins: *mut c_int = malloc((x_pins.len() * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
-        let pins: *mut c_int = malloc((nets.len() * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
-        let partvec: *mut c_int = malloc((c as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
+        let cwghts: *mut c_int =
+            malloc((c as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
+        let nwghts: *mut c_int =
+            malloc((n as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
+        let xpins: *mut c_int =
+            malloc((x_pins.len() * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
+        let pins: *mut c_int =
+            malloc((nets.len() * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
+        let partvec: *mut c_int =
+            malloc((c as usize * std::mem::size_of::<c_int>()) as libc::size_t) as *mut c_int;
         let mut cut: c_int = 0;
-        let partweights: *mut c_int = malloc(args._k as usize * std::mem::size_of::<c_int>() as libc::size_t) as *mut c_int;
+        let partweights: *mut c_int =
+            malloc(args._k as usize * std::mem::size_of::<c_int>() as libc::size_t) as *mut c_int;
 
         for i in 0..c {
             *cwghts.wrapping_add(i as usize) = 1;
@@ -85,22 +99,12 @@ pub fn partition(number_vertices: u32, number_nets: u32, nets: &Vec<u32>, x_pins
         PaToH_Initialize_Parameters(
             &mut args,
             PATOH_CONPART as c_int,
-            PATOH_SUGPARAM_DEFAULT as c_int
+            PATOH_SUGPARAM_DEFAULT as c_int,
         );
 
         args.seed = 1;
 
-        PaToH_Alloc(
-            &mut args,
-            c,
-            n,
-            nconst,
-            cwghts,
-            nwghts,
-            xpins,
-            pins
-        );
-
+        PaToH_Alloc(&mut args, c, n, nconst, cwghts, nwghts, xpins, pins);
 
         PaToH_Part(
             &mut args,
@@ -115,10 +119,8 @@ pub fn partition(number_vertices: u32, number_nets: u32, nets: &Vec<u32>, x_pins
             ptr::null_mut(),
             partvec,
             partweights,
-            &mut cut
+            &mut cut,
         );
-
-
 
         //let res = PaToH_Check_Hypergraph(c, n, nconst, cwghts, nwghts, xpins, pins);
 

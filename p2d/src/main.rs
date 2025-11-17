@@ -1,25 +1,24 @@
-use std::{fs};
-use std::collections::HashMap;
-use clap::{Arg, Command};
 use crate::solving::ddnnf::DDNNFPrinter;
 use crate::solving::pseudo_boolean_datastructure::PseudoBooleanFormula;
 use crate::solving::solver::Solver;
+use clap::{Arg, Command};
+use std::collections::HashMap;
+use std::fs;
 
 mod solving {
+    pub mod ddnnf;
     pub mod pseudo_boolean_datastructure;
     pub mod solver;
-    pub mod ddnnf;
 }
 
 mod partitioning {
-    pub mod patoh_api;
-    pub mod hypergraph_partitioning;
     pub mod disconnected_component_datastructure;
     pub mod hypergraph;
+    pub mod hypergraph_partitioning;
+    pub mod patoh_api;
 }
 
 fn main() {
-
     let matches = Command::new("p2d")
         .version("1.0")
         .about("Transforms a set of pseudo-boolean constraints into d d-DNNF (and calculates the model count)")
@@ -54,7 +53,7 @@ fn main() {
     run_not_rec(input_file, mode, optional_output_file);
 }
 
-fn run_not_rec(input_path: &str, mode: &str, output_file: Option<&String>){
+fn run_not_rec(input_path: &str, mode: &str, output_file: Option<&String>) {
     let file_content = fs::read_to_string(input_path).expect("cannot read file");
     let opb_file = p2d_opb::parse(file_content.as_str()).expect("error while parsing");
     let formula = PseudoBooleanFormula::new(&opb_file);
@@ -67,11 +66,16 @@ fn run_not_rec(input_path: &str, mode: &str, output_file: Option<&String>){
         if output_file.is_none() {
             panic!("Missing output file!")
         }
-        let mut printer = DDNNFPrinter{true_sink_id: None, false_sink_id: None, ddnnf: result.ddnnf, current_node_id: 0, id_map: HashMap::new(), edge_counter: 0, node_counter: 0};
+        let mut printer = DDNNFPrinter {
+            true_sink_id: None,
+            false_sink_id: None,
+            ddnnf: result.ddnnf,
+            current_node_id: 0,
+            id_map: HashMap::new(),
+            edge_counter: 0,
+            node_counter: 0,
+        };
         let ddnnf = printer.print();
         fs::write(output_file.unwrap(), ddnnf).expect("Error while writing outputfile");
     }
-
-
-
 }

@@ -11,14 +11,19 @@ pub struct ComponentBasedFormula {
 }
 
 impl ComponentBasedFormula {
-    pub fn new(previous_number_unsat_constraints: usize, previous_number_unassigned_variables: u32, previous_variables_in_scope: BTreeSet<usize>, previous_constraint_indexes_in_scope: BTreeSet<usize>) -> ComponentBasedFormula {
-        ComponentBasedFormula{
-            components: Vec:: new(),
+    pub fn new(
+        previous_number_unsat_constraints: usize,
+        previous_number_unassigned_variables: u32,
+        previous_variables_in_scope: BTreeSet<usize>,
+        previous_constraint_indexes_in_scope: BTreeSet<usize>,
+    ) -> ComponentBasedFormula {
+        ComponentBasedFormula {
+            components: Vec::new(),
             current_component: 0,
             previous_number_unsat_constraints,
             previous_number_unassigned_variables,
             previous_variables_in_scope,
-            previous_constraint_indexes_in_scope
+            previous_constraint_indexes_in_scope,
         }
     }
 }
