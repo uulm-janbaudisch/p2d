@@ -1,15 +1,9 @@
 use std::{fs};
 use std::collections::HashMap;
 use clap::{Arg, Command};
-use clap::builder::Str;
 use crate::solving::ddnnf::DDNNFPrinter;
 use crate::solving::pseudo_boolean_datastructure::PseudoBooleanFormula;
 use crate::solving::solver::Solver;
-
-mod parsing {
-    pub mod parser;
-    pub mod equation_datastructure;
-}
 
 mod solving {
     pub mod pseudo_boolean_datastructure;
@@ -62,7 +56,7 @@ fn main() {
 
 fn run_not_rec(input_path: &str, mode: &str, output_file: Option<&String>){
     let file_content = fs::read_to_string(input_path).expect("cannot read file");
-    let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+    let opb_file = p2d_opb::parse(file_content.as_str()).expect("error while parsing");
     let formula = PseudoBooleanFormula::new(&opb_file);
     let mut solver = Solver::new(formula);
     let result = solver.solve();

@@ -1,10 +1,10 @@
 use pest::iterators::Pair;
 use pest::Parser;
 use pest_derive::Parser;
-use crate::parsing::equation_datastructure::{Equation, EquationKind, OPBFile, Summand};
+use super::{Equation, EquationKind, OPBFile, Summand};
 
 #[derive(Parser)]
-#[grammar = "./src/parsing/opb.pest"] // points to the grammar file we created
+#[grammar = "./src/opb.pest"] // points to the grammar file we created
 struct OPBParser;
 
 pub fn parse(content: &str) -> Result<OPBFile, String>{
@@ -191,13 +191,11 @@ fn parse_equation_kind(rule: Pair<Rule>) -> Result<EquationKind, String> {
 
 #[cfg(test)]
 mod tests {
-    use serial_test::serial;
-    use crate::parsing;
     use super::*;
 
     #[test]
     fn test_ex_1() {
-        let result = parsing::parser::parse("");
+        let result = parse("");
 
         match result {
             Err(err) => {
@@ -209,7 +207,7 @@ mod tests {
 
     #[test]
     fn test_ex_2() {
-        let result = parsing::parser::parse("#variable= 0 #constraint= 0\n");
+        let result = parse("#variable= 0 #constraint= 0\n");
 
         match result {
             Err(err) => {
@@ -221,7 +219,7 @@ mod tests {
 
     #[test]
     fn test_ex_3() {
-        let result = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 * x2 >= 1");
+        let result = parse("#variable= 2 #constraint= 1\nx1 * x2 >= 1");
 
         match result {
             Err(err) => {
@@ -233,7 +231,7 @@ mod tests {
 
     #[test]
     fn test_ex_4() {
-        let result = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 _ 1;\n");
+        let result = parse("#variable= 2 #constraint= 1\nx1 + x2 _ 1;\n");
 
         match result {
             Err(err) => {

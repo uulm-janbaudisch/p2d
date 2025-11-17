@@ -13,7 +13,7 @@ In general, the dependencies are managed with cargo.
 For hypergraph partioning, p2d uses the patoh library which cannot directly include it due to licensing issues. To also use patoh follow these steps:
 1. Download [patoh](https://faculty.cc.gatech.edu/~umit/software.html)
 2. Read the license of patoh and check if you comply to it.
-3. Put the patoh directory in a lib directory. The path should be `<PROJECT_ROOT>/lib/patoh/`
+3. Put the patoh directory in a lib directory. The path should be `<PROJECT_ROOT>/p2d/lib/patoh/`
 
 ## Compiling
 Compile the project: `cargo build --release`

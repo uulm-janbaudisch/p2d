@@ -1,0 +1,24 @@
+[package]
+name = "p2d"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+readme = "../README.md"
+workspace = ".."
+
+[dependencies]
+bimap = "0.6"
+clap = { version = "4", features = ["derive"] }
+libc = "0.2"
+num-bigint = "0.4"
+num-traits = "0.2"
+p2d_opb = { version = "0.1", path = "../p2d_opb" }
+serial_test = "3"
+
+[features]
+show_progress = []
+cache = []
+disconnected_components = []
+clause_learning = []
+
+default = ["show_progress", "disconnected_components", "clause_learning", "cache"]

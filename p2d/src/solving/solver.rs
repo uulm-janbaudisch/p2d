@@ -1057,14 +1057,14 @@ mod tests {
     use std::fs;
     use std::str::FromStr;
     use serial_test::serial;
-    use crate::parsing;
+    use p2d_opb::parse;
     use crate::solving::ddnnf::DDNNFPrinter;
     use super::*;
 
     #[test]
     #[serial]
     fn test_ex_1() {
-        let opb_file = parsing::parser::parse("#variable= 5 #constraint= 2\nx1 + x2 >= 0;\n3 x2 + x3 + x4 + x5 >= 3;").expect("error while parsing");
+        let opb_file = parse("#variable= 5 #constraint= 2\nx1 + x2 >= 0;\n3 x2 + x3 + x4 + x5 >= 3;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1074,7 +1074,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_2() {
-        let opb_file = parsing::parser::parse("#variable= 5 #constraint= 2\nx1 + x2 >= 1;\n3 x2 + x3 + x4 + x5 >= 3;").expect("error while parsing");
+        let opb_file = parse("#variable= 5 #constraint= 2\nx1 + x2 >= 1;\n3 x2 + x3 + x4 + x5 >= 3;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1085,7 +1085,7 @@ mod tests {
     #[serial]
     fn test_ex_3() {
         let file_content = fs::read_to_string("./test_models/berkeleydb.opb").expect("cannot read file");
-        let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+        let opb_file = parse(file_content.as_str()).expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1102,7 +1102,7 @@ mod tests {
     #[serial]
     fn test_ex_4() {
         let file_content = fs::read_to_string("./test_models/financialservices01.opb").expect("cannot read file");
-        let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+        let opb_file = parse(file_content.as_str()).expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1113,7 +1113,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_5() {
-        let opb_file = parsing::parser::parse("#variable= 3 #constraint= 1\n2 x + y + z >= 2;\n").expect("error while parsing");
+        let opb_file = parse("#variable= 3 #constraint= 1\n2 x + y + z >= 2;\n").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1130,7 +1130,7 @@ mod tests {
     #[serial]
     fn test_ex_6() {
         let file_content = fs::read_to_string("./test_models/automotive2_4.opb").expect("cannot read file");
-        let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+        let opb_file = parse(file_content.as_str()).expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1147,7 +1147,7 @@ mod tests {
     #[serial]
     fn test_ex_7() {
         let file_content = fs::read_to_string("./test_models/automotive01.opb").expect("cannot read file");
-        let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+        let opb_file = parse(file_content.as_str()).expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1164,7 +1164,7 @@ mod tests {
     #[serial]
     fn test_ex_8() {
         let file_content = fs::read_to_string("./test_models/busybox.opb").expect("cannot read file");
-        let opb_file = parsing::parser::parse(file_content.as_str()).expect("error while parsing");
+        let opb_file = parse(file_content.as_str()).expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1180,7 +1180,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_9() {
-        let opb_file = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 = 1;").expect("error while parsing");
+        let opb_file = parse("#variable= 2 #constraint= 1\nx1 + x2 = 1;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1190,7 +1190,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_10() {
-        let opb_file = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 < 2;").expect("error while parsing");
+        let opb_file = parse("#variable= 2 #constraint= 1\nx1 + x2 < 2;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1200,7 +1200,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_11() {
-        let opb_file = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 > 1;").expect("error while parsing");
+        let opb_file = parse("#variable= 2 #constraint= 1\nx1 + x2 > 1;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1210,7 +1210,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_12() {
-        let opb_file = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 != 1;").expect("error while parsing");
+        let opb_file = parse("#variable= 2 #constraint= 1\nx1 + x2 != 1;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let model_count = solver.solve().model_count;
@@ -1220,7 +1220,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_13() {
-        let opb_file = parsing::parser::parse("#variable= 1 #constraint= 1\nx1 >= 0;").expect("error while parsing");
+        let opb_file = parse("#variable= 1 #constraint= 1\nx1 >= 0;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1232,7 +1232,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_14() {
-        let opb_file = parsing::parser::parse("#variable= 1 #constraint= 1\nx1 > 1;").expect("error while parsing");
+        let opb_file = parse("#variable= 1 #constraint= 1\nx1 > 1;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();
@@ -1244,7 +1244,7 @@ mod tests {
     #[test]
     #[serial]
     fn test_ex_15() {
-        let opb_file = parsing::parser::parse("#variable= 2 #constraint= 1\nx1 + x2 >= 1;").expect("error while parsing");
+        let opb_file = parse("#variable= 2 #constraint= 1\nx1 + x2 >= 1;").expect("error while parsing");
         let formula = PseudoBooleanFormula::new(&opb_file);
         let mut solver = Solver::new(formula);
         let result = solver.solve();

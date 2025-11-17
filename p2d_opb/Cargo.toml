@@ -1,0 +1,11 @@
+[package]
+name = "p2d_opb"
+version = "0.1.0"
+description = "A hypergraph partitioner."
+edition = "2024"
+workspace = ".."
+
+[dependencies]
+bimap = "0.6"
+pest = "2"
+pest_derive = "2"

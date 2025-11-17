@@ -1,3 +1,7 @@
+mod parser;
+
+pub use parser::{parse, Rule};
+
 use bimap::{BiHashMap, BiMap};
 
 pub struct OPBFile {
@@ -42,6 +46,3 @@ pub struct Summand {
     pub factor: i128,
     pub positive: bool
 }
-
-
-
