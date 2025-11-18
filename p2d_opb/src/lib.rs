@@ -1,6 +1,6 @@
 mod parser;
 
-pub use parser::{Rule, parse};
+pub use parser::parse;
 
 use bimap::{BiHashMap, BiMap};
 
