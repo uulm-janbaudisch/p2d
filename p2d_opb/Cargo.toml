@@ -1,8 +1,11 @@
 [package]
 name = "p2d_opb"
+description = "A representation of OPB formulas"
 version = "0.1.0"
-description = "A hypergraph partitioner."
 edition = "2024"
+license = "MIT"
+readme = "../README.md"
+repository = "https://github.com/TUBS-ISF/p2d.git"
 workspace = ".."
 
 [dependencies]
