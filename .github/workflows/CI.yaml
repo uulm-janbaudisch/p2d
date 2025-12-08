@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  - push
+
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - double: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - double: x86_64-linux
+            runner: ubuntu-24.04
+          - double: x86_64-darwin
+            runner: macos-15-intel
+          - double: aarch64-darwin
+            runner: macos-15
+    runs-on: ${{ matrix.target.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Nix
+        uses: cachix/install-nix-action@v31
+      - name: Build
+        run: nix build -L
+      - name: Upload
+        uses: actions/upload-artifact@v5
+        with:
+          name: p2d-${{ matrix.target.double }}
+          path: result
