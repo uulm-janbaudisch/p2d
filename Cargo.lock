@@ -341,7 +341,7 @@ dependencies = [
 
 [[package]]
 name = "p2d_opb"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bimap",
  "pest",

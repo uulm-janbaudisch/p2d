@@ -15,7 +15,7 @@ clap = { version = "4", features = ["derive"] }
 libc = "0.2"
 num-bigint = "0.4"
 num-traits = "0.2"
-p2d_opb = { version = "0.1", path = "../p2d_opb" }
+p2d_opb = { version = "0.2", path = "../p2d_opb" }
 serial_test = "3"
 
 [features]
